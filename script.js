@@ -449,7 +449,12 @@ function addTradeToTable(trade, index) {
     <td>${trade.leverage}</td>
     <td>${trade.strategy}</td>
     <td>${trade.notes}</td>
-    <td>${trade.profitLoss.toFixed(2)}</td>
+    <td>${
+      !isNaN(Number(trade.profitLoss))
+        ? Number(trade.profitLoss).toFixed(2)
+        : "N/A"
+    }</td>
+
     <td><button onclick="deleteTrade(${index})"><i class="fas fa-trash-alt"></i></button></td>
   `;
   tradeTableBody.appendChild(row);
