@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My_G App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#daily-log">Daily Log</a></li>
+          <li><a href="#trading-journal">Trading Journal</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="dashboard">
+        <h1>Dashboard</h1>
+        <p>Overview of projects, daily tasks, and trading stats.</p>
+
+        <div id="quick-actions">
+          <button onclick="openProjectForm(); scrollToSection('#projects');">
+            + Add Project
+          </button>
+          <button onclick="openDailyForm(); scrollToSection('#daily-log');">
+            + Add Daily Task
+          </button>
+          <button
+            onclick="openTradeForm(); scrollToSection('#trading-journal');"
+          >
+            + Add Trade
+          </button>
+        </div>
+
+        <div id="quick-stats">
+          <div class="stat-card">
+            <h2 id="total-projects">0</h2>
+            <p>Projects</p>
+          </div>
+          <div class="stat-card">
+            <h2 id="tasks-today">0</h2>
+            <p>Tasks Logged</p>
+          </div>
+          <div class="stat-card">
+            <h2 id="trades-logged">0</h2>
+            <p>Trades Logged</p>
+          </div>
+        </div>
+
+        <div id="dashboard-charts">
+          <div class="chart-card">
+            <canvas id="summaryChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h1>Projects</h1>
+        <form id="project-form">
+          <input
+            type="text"
+            id="project-name"
+            placeholder="Project Name"
+            required
+          />
+          <input
+            type="text"
+            id="project-purpose"
+            placeholder="Project Purpose"
+            required
+          />
+          <textarea id="project-steps" placeholder="Steps" required></textarea>
+          <button type="submit">
+            Add Project <i class="fas fa-plus-circle"></i>
+          </button>
+        </form>
+        <div id="project-controls">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search by name..."
+          />
+          <select id="status-filter">
+            <option value="all">All</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+          </select>
+          <select id="sort-order">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <ul id="project-list"></ul>
+      </section>
+
+      <section id="daily-log">
+        <h1>Daily Log</h1>
+        <form id="daily-form">
+          <input
+            type="text"
+            id="daily-task"
+            placeholder="What did you do today?"
+            required
+          />
+          <input type="date" id="daily-date" required />
+          <select id="daily-category">
+            <option value="" disabled selected>Select Category</option>
+            <option value="coding">Coding</option>
+            <option value="forex">Forex</option>
+            <option value="exercise">Exercise</option>
+            <option value="learning">Learning</option>
+            <option value="others">Others</option>
+          </select>
+          <button type="submit">Add <i class="fas fa-plus-circle"></i></button>
+        </form>
+        <div id="filter-container">
+          <label for="filter">Filter by Category:</label>
+          <select id="category-filter">
+            <option value="all">All</option>
+            <option value="coding">Coding</option>
+            <option value="forex">Forex</option>
+            <option value="exercise">Exercise</option>
+            <option value="learning">Learning</option>
+            <option value="others">Others</option>
+          </select>
+        </div>
+        <div id="sort-container">
+          <label for="sort">Sort by Date:</label>
+          <select id="sort">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <ul id="daily-list"></ul>
+      </section>
+
+      <section id="trading-journal">
+        <h1>Trading Journal</h1>
+        <form id="trade-form">
+          <label for="trade-date">Trade Date:</label>
+          <input type="date" id="trade-date" required />
+          <label for="trade-type">Trade Type:</label>
+          <select id="trade-type" required>
+            <option value="Buy">Buy</option>
+            <option value="Sell">Sell</option>
+          </select>
+          <label for="currency-pair">Currency Pair:</label>
+          <input type="text" id="currency-pair" required />
+          <label for="entry-price">Entry Price:</label>
+          <input type="number" id="entry-price" step="0.00001" required />
+          <label for="exit-price">Exit Price:</label>
+          <input type="number" id="exit-price" step="0.00001" required />
+          <label for="lot-size">Lot Size:</label>
+          <input type="number" id="lot-size" step="0.01" min="0.01" required />
+          <label for="leverage">Leverage:</label>
+          <input
+            type="text"
+            id="leverage"
+            name="leverage"
+            placeholder="1:200 or 200"
+            required
+          />
+          <label for="spread">Spread:</label>
+          <input type="number" id="spread" step="0.00001" value="0" />
+          <label for="swap">Swap:</label>
+          <input type="number" id="swap" step="0.01" value="0" />
+          <label for="strategy">Strategy:</label>
+          <input type="text" id="strategy" required />
+          <label for="trade-notes">Notes:</label>
+          <textarea id="trade-notes"></textarea>
+          <button type="submit">
+            Add Trade <i class="fas fa-plus-circle"></i>
+          </button>
+        </form>
+        <div>
+          <div>
+            <h2>Statistics</h2>
+            <p>Total Trades: <span id="total-trades">0</span></p>
+            <p>Wins: <span id="wins">0</span></p>
+            <p>Losses: <span id="losses">0</span></p>
+            <p>Win Rate: <span id="win-rate">0%</span></p>
+            <p>Total Profit/Loss: <span id="total-pl">0.00</span></p>
+            <p>Average Risk/Reward: <span id="rrr">0.00</span></p>
+            <p>Best Trade: <span id="best-trade">0.00</span></p>
+            <p>Worst Trade: <span id="worst-trade">0.00</span></p>
+            <p>Profit Factor: <span id="profit-factor">0.00</span></p>
+          </div>
+          <button onclick="exportToCSV()">Export to CSV</button>
+        </div>
+        <h2>Trade History</h2>
+        <div class="responsive-table-container">
+          <table id="trade-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Currency Pair</th>
+                <th>Entry Price</th>
+                <th>Exit Price</th>
+                <th>Lot Size</th>
+                <th>Leverage</th>
+                <th>Strategy</th>
+                <th>Notes</th>
+                <th>Profit/Loss</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
