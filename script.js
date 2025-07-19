@@ -598,13 +598,24 @@ tradeForm.addEventListener("submit", (e) => {
     notes: document.getElementById("trade-notes").value,
   };
 
-  trade.profitLoss =
-    (trade.exit - trade.entry) *
-      (trade.type === "Buy" ? 1 : -1) *
-      trade.lot *
-      100000 -
-    trade.spread -
-    trade.swap;
+  const isJPY = trade.pair.includes("JPY");
+  const contractSize = 120000; // Standard contract size per lot
+
+  // Calculate price difference depending on trade type
+  const priceDifference =
+    trade.type === "Buy" ? trade.exit - trade.entry : trade.entry - trade.exit;
+
+  // Calculate profit in quote currency
+  let profitInQuoteCurrency = priceDifference * contractSize * trade.lot;
+
+  // If JPY pair, profit is already in JPY; convert to USD (account currency) using exit price
+  if (isJPY) {
+    // Assuming account base currency is USD, convert JPY profit to USD
+    profitInQuoteCurrency = profitInQuoteCurrency / trade.exit;
+  }
+
+  // Now profitInQuoteCurrency is profit in USD approx.
+  trade.profitLoss = profitInQuoteCurrency;
 
   trades.push(trade);
   saveTrades();
