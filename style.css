@@ -1,5 +1,5 @@
 /* Import Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Clicker+Script&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Clicker+Script&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,700&display=swap");
 
 /* Root Variables */
 :root {
@@ -355,6 +355,7 @@ section {
   position: absolute; /* Position actions to the top right */
   top: 1rem;
   right: 1.5rem;
+  z-index: 10; /* ADDED: Ensure buttons are on top */ /* */
 }
 
 .item-actions button {
@@ -517,8 +518,10 @@ section {
 }
 
 .trade-actions {
-  display: flex;
+  display: flex; /* ADDED: Ensure buttons are laid out correctly */ /* */
   gap: 0.5rem;
+  justify-content: flex-end; /* ADDED: Align actions to the right within the cell */ /* */
+  align-items: center; /* ADDED: Vertically center buttons */ /* */
 }
 
 .trade-actions button {
@@ -757,6 +760,7 @@ footer {
     position: static; /* Stack actions below item content on very small screens */
     margin-top: 0.8rem;
     justify-content: flex-end;
+    z-index: auto; /* ADDED: Reset z-index for static position */ /* */
   }
 }
 

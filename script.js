@@ -304,9 +304,6 @@ function renderProjects() {
                 <div class="item-actions">
                     <button onclick="editProject('${project.id}')"><i class="fas fa-edit"></i></button>
                     <button onclick="deleteProject('${project.id}')"><i class="fas fa-trash-alt"></i></button>
-                    <button onclick="toggleProjectStatus('${project.id}')">
-                        <i class="fas ${project.completed ? 'fa-undo' : 'fa-check'}"></i>
-                    </button>
                 </div>
             </h3>
             <p><strong>Purpose:</strong> ${project.purpose}</p>
@@ -315,6 +312,10 @@ function renderProjects() {
             <ul class="project-steps-list">
                 ${stepsHtml}
             </ul>
+            <div class="completion-checkbox">
+                <input type="checkbox" id="project-completed-${project.id}" ${project.completed ? 'checked' : ''} onchange="toggleProjectStatus('${project.id}')">
+                <label for="project-completed-${project.id}">Mark as Completed</label>
+            </div>
             <span class="status-indicator ${project.completed ? 'completed' : 'in-progress'}">
                 ${project.completed ? 'Completed' : 'In Progress'}
             </span>
