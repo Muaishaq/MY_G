@@ -8,7 +8,7 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==l"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -27,168 +27,156 @@
     </header>
 
     <main>
-      <section id="dashboard">
+      <section id="dashboard" class="container">
         <h1>Dashboard</h1>
-        <p>Overview of projects, daily tasks, and trading stats.</p>
-
-        <div id="quick-actions">
-          <button onclick="openProjectForm(); scrollToSection('#projects');">
-            + Add Project
-          </button>
-          <button onclick="openDailyForm(); scrollToSection('#daily-log');">
-            + Add Daily Task
-          </button>
-          <button
-            onclick="openTradeForm(); scrollToSection('#trading-journal');"
-          >
-            + Add Trade
-          </button>
-        </div>
-
-        <div id="quick-stats">
+        <p>Overview of projects, daily tasks, and trades.</p>
+        <div class="dashboard-stats">
           <div class="stat-card">
-            <h2 id="total-projects">0</h2>
-            <p>Projects</p>
+            <h3>Total Projects</h3>
+            <p id="total-projects">0</p>
           </div>
           <div class="stat-card">
-            <h2 id="tasks-today">0</h2>
-            <p>Tasks Logged</p>
+            <h3>Tasks Logged Today</h3>
+            <p id="tasks-today">0</p>
           </div>
           <div class="stat-card">
-            <h2 id="trades-logged">0</h2>
-            <p>Trades Logged</p>
+            <h3>Trades Logged</h3>
+            <p id="trades-logged">0</p>
           </div>
         </div>
-
-        <div id="dashboard-charts">
-          <div class="chart-card">
+        <div class="dashboard-charts">
+          <div class="chart-container">
             <canvas id="summaryChart"></canvas>
           </div>
+          <div class="chart-container">
+            <canvas id="tradingMetricsChart"></canvas>
+          </div>
         </div>
       </section>
 
-      <section id="projects">
+      <section id="projects" class="container">
         <h1>Projects</h1>
-        <form id="project-form">
-          <input
-            type="text"
-            id="project-name"
-            placeholder="Project Name"
-            required
-          />
-          <input
-            type="text"
-            id="project-purpose"
-            placeholder="Project Purpose"
-            required
-          />
-          <textarea id="project-steps" placeholder="Steps" required></textarea>
-          <button type="submit">
-            Add Project <i class="fas fa-plus-circle"></i>
+        <div class="section-actions">
+          <button class="add-btn" onclick="openForm('project-form-modal')">
+            <i class="fas fa-plus"></i> Add New Project
           </button>
-        </form>
-        <div id="project-controls">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Search by name..."
-          />
-          <select id="status-filter">
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="pending">Pending</option>
-          </select>
-          <select id="sort-order">
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="completed">Completed</option>
-          </select>
+          <div class="sort-filter">
+            <label for="project-sort">Sort by:</label>
+            <select id="project-sort">
+              <option value="none">None</option>
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="date-asc">Date Added (Oldest First)</option>
+              <option value="date-desc">Date Added (Newest First)</option>
+              <option value="status">Status (Completed First)</option>
+            </select>
+          </div>
         </div>
-        <ul id="project-list"></ul>
+
+        <div class="list-container" id="project-list-container">
+          <p class="empty-state" id="no-projects-message">No projects yet. Click "Add New Project" to get started!</p>
+          <ul id="project-list">
+            </ul>
+        </div>
+
+        <div id="project-form-modal" class="modal">
+          <div class="modal-content">
+            <span class="close-button" onclick="closeForm('project-form-modal')">&times;</span>
+            <h2>Project Details</h2>
+            <form id="project-form" data-form-type="project">
+              <label for="project-name">Project Name:</label>
+              <input type="text" id="project-name" required />
+
+              <label for="project-purpose">Purpose:</label>
+              <textarea id="project-purpose" rows="3" required></textarea>
+
+              <label for="project-steps">Steps (one per line):</label>
+              <textarea id="project-steps" rows="5"></textarea>
+
+              <div class="form-actions">
+                <button type="submit" id="project-form-submit-btn">Add Project</button>
+                <button type="button" class="cancel-btn" onclick="closeForm('project-form-modal'); clearForms('project')">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </section>
 
-      <section id="daily-log">
+      <section id="daily-log" class="container">
         <h1>Daily Log</h1>
-        <form id="daily-form">
-          <input
-            type="text"
-            id="daily-task"
-            placeholder="What did you do today?"
-            required
-          />
-          <input type="date" id="daily-date" required />
-          <select id="daily-category">
-            <option value="" disabled selected>Select Category</option>
-            <option value="coding">Coding</option>
-            <option value="forex">Forex</option>
-            <option value="exercise">Exercise</option>
-            <option value="learning">Learning</option>
-            <option value="others">Others</option>
-          </select>
-          <button type="submit">Add <i class="fas fa-plus-circle"></i></button>
-        </form>
-        <div id="filter-container">
-          <label for="filter">Filter by Category:</label>
-          <select id="category-filter">
-            <option value="all">All</option>
-            <option value="coding">Coding</option>
-            <option value="forex">Forex</option>
-            <option value="exercise">Exercise</option>
-            <option value="learning">Learning</option>
-            <option value="others">Others</option>
-          </select>
+        <div class="section-actions">
+          <button class="add-btn" onclick="openForm('daily-form-modal')">
+            <i class="fas fa-plus"></i> Log Daily Activity
+          </button>
+          <div class="sort-filter">
+            <label for="daily-sort">Sort by:</label>
+            <select id="daily-sort">
+              <option value="none">None</option>
+              <option value="date-asc">Date (Oldest First)</option>
+              <option value="date-desc">Date (Newest First)</option>
+              <option value="category">Category</option>
+              <option value="status">Status (Completed First)</option>
+            </select>
+          </div>
         </div>
-        <div id="sort-container">
-          <label for="sort">Sort by Date:</label>
-          <select id="sort">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="completed">Completed</option>
-          </select>
+
+        <div class="list-container" id="daily-log-container">
+          <p class="empty-state" id="no-daily-logs-message">No daily activities logged yet. Log your first activity!</p>
+          <ul id="daily-log-list">
+            </ul>
         </div>
-        <ul id="daily-list"></ul>
+
+        <div id="daily-form-modal" class="modal">
+          <div class="modal-content">
+            <span class="close-button" onclick="closeForm('daily-form-modal')">&times;</span>
+            <h2>Log Daily Activity</h2>
+            <form id="daily-form" data-form-type="daily">
+              <label for="daily-task">Activity/Task:</label>
+              <input type="text" id="daily-task" required />
+
+              <label for="daily-date">Date:</label>
+              <input type="date" id="daily-date" required />
+
+              <label for="daily-category">Category:</label>
+              <select id="daily-category" required>
+                <option value="">Select Category</option>
+                <option value="Coding">Coding</option>
+                <option value="Forex">Forex</option>
+                <option value="Exercise">Exercise</option>
+                <option value="Learning">Learning</option>
+                <option value="Others">Others</option>
+              </select>
+
+              <div class="form-actions">
+                <button type="submit" id="daily-form-submit-btn">Add Log</button>
+                <button type="button" class="cancel-btn" onclick="closeForm('daily-form-modal'); clearForms('daily')">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </section>
 
-      <section id="trading-journal">
+      <section id="trading-journal" class="container">
         <h1>Trading Journal</h1>
-        <form id="trade-form">
-          <label for="trade-date">Trade Date:</label>
-          <input type="date" id="trade-date" required />
-          <label for="trade-type">Trade Type:</label>
-          <select id="trade-type" required>
-            <option value="Buy">Buy</option>
-            <option value="Sell">Sell</option>
-          </select>
-          <label for="currency-pair">Currency Pair:</label>
-          <input type="text" id="currency-pair" required />
-          <label for="entry-price">Entry Price:</label>
-          <input type="number" id="entry-price" step="0.00001" required />
-          <label for="exit-price">Exit Price:</label>
-          <input type="number" id="exit-price" step="0.00001" required />
-          <label for="lot-size">Lot Size:</label>
-          <input type="number" id="lot-size" step="0.01" min="0.01" required />
-          <label for="leverage">Leverage:</label>
-          <input
-            type="text"
-            id="leverage"
-            name="leverage"
-            placeholder="1:200 or 200"
-            required
-          />
-          <label for="spread">Spread:</label>
-          <input type="number" id="spread" step="0.00001" value="0" />
-          <label for="swap">Swap:</label>
-          <input type="number" id="swap" step="0.01" value="0" />
-          <label for="strategy">Strategy:</label>
-          <input type="text" id="strategy" required />
-          <label for="trade-notes">Notes:</label>
-          <textarea id="trade-notes"></textarea>
-          <button type="submit">
-            Add Trade <i class="fas fa-plus-circle"></i>
+        <div class="section-actions">
+          <button class="add-btn" onclick="openForm('trade-form-modal')">
+            <i class="fas fa-plus"></i> Add New Trade
           </button>
-        </form>
-        <div>
-          <div>
+          <div class="sort-filter">
+            <label for="trade-sort">Sort by:</label>
+            <select id="trade-sort">
+              <option value="none">None</option>
+              <option value="date-asc">Date (Oldest First)</option>
+              <option value="date-desc">Date (Newest First)</option>
+              <option value="pl-asc">Profit/Loss (Low to High)</option>
+              <option value="pl-desc">Profit/Loss (High to Low)</option>
+              <option value="pair">Currency Pair</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats-and-export">
+          <div class="trade-stats">
             <h2>Statistics</h2>
             <p>Total Trades: <span id="total-trades">0</span></p>
             <p>Wins: <span id="wins">0</span></p>
@@ -200,31 +188,90 @@
             <p>Worst Trade: <span id="worst-trade">0.00</span></p>
             <p>Profit Factor: <span id="profit-factor">0.00</span></p>
           </div>
-          <button onclick="exportToCSV()">Export to CSV</button>
+          <button class="export-btn" onclick="exportToCSV()">
+            <i class="fas fa-file-csv"></i> Export to CSV
+          </button>
         </div>
+
         <h2>Trade History</h2>
         <div class="responsive-table-container">
+          <p class="empty-state" id="no-trades-message">No trades logged yet. Add your first trade!</p>
           <table id="trade-table">
             <thead>
               <tr>
                 <th>Date</th>
                 <th>Type</th>
-                <th>Currency Pair</th>
-                <th>Entry Price</th>
-                <th>Exit Price</th>
-                <th>Lot Size</th>
-                <th>Leverage</th>
-                <th>Strategy</th>
+                <th>Pair</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Lot</th>
+                <th>Lev</th>
+                <th>Strat</th>
                 <th>Notes</th>
-                <th>Profit/Loss</th>
+                <th>P/L</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              </tbody>
           </table>
+        </div>
+
+        <div id="trade-form-modal" class="modal">
+          <div class="modal-content">
+            <span class="close-button" onclick="closeForm('trade-form-modal')">&times;</span>
+            <h2>Trade Details</h2>
+            <form id="trade-form" data-form-type="trade">
+              <label for="trade-date">Date:</label>
+              <input type="date" id="trade-date" required />
+
+              <label for="trade-type">Type:</label>
+              <select id="trade-type" required>
+                <option value="">Select Type</option>
+                <option value="Buy">Buy</option>
+                <option value="Sell">Sell</option>
+              </select>
+
+              <label for="currency-pair">Currency Pair:</label>
+              <input type="text" id="currency-pair" placeholder="e.g., EUR/USD" required />
+
+              <label for="entry-price">Entry Price:</label>
+              <input type="number" id="entry-price" step="0.00001" required />
+
+              <label for="exit-price">Exit Price:</label>
+              <input type="number" id="exit-price" step="0.00001" required />
+
+              <label for="lot-size">Lot Size:</label>
+              <input type="number" id="lot-size" step="0.01" required />
+
+              <label for="leverage">Leverage:</label>
+              <input type="number" id="leverage" step="1" />
+
+              <label for="spread">Spread (pips):</label>
+              <input type="number" id="spread" step="0.1" />
+
+              <label for="swap">Swap (pips):</label>
+              <input type="number" id="swap" step="0.1" />
+
+              <label for="strategy">Strategy:</label>
+              <input type="text" id="strategy" />
+
+              <label for="trade-notes">Notes:</label>
+              <textarea id="trade-notes" rows="3"></textarea>
+
+              <div class="form-actions">
+                <button type="submit" id="trade-form-submit-btn">Add Trade</button>
+                <button type="button" class="cancel-btn" onclick="closeForm('trade-form-modal'); clearForms('trade')">Cancel</button>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
     </main>
+
+    <footer>
+      <p>&copy; 2024 My_G App. All rights reserved.</p>
+    </footer>
 
     <script src="script.js"></script>
   </body>
